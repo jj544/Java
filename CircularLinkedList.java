@@ -54,12 +54,20 @@ public class CircularLinkedList<E> {
      * 
      * E.g. for the list containing 6 3 8 in that order, the result it "[6, 3, 8]". */
     public String toString() {
-        /* Note: This method should NOT refer to field size. It refers to
-         * field head and all the succ fields of the nodes. Reason: It allows
-         * toString to be used in testing head and all the succ fields. */
-
-        // Write this method and delete this comment
-        return null;
+        String a = new String();
+        a += '[';
+        if(head != null) {   
+            Node b = head.succ;
+            a += head.value;
+            moveDown();
+            while(head != null  && head.succ != b){
+                a += ',';
+                a += head.value;
+                moveDown();
+            }
+        }
+        a += ']';
+        return a.toString();
     }
 
     /** Return a representation of this list: its values in reverse, with adjacent
@@ -67,60 +75,95 @@ public class CircularLinkedList<E> {
      * 
      * E.g. for the list containing 6 3 8 in that order, the result it "[8, 3, 6]".*/
     public String toStringReverse() {
-        /* Note: This method should NOT refer to field size. It refers to
-         * field head and all the pred fields of the nodes. Reason: It allows
-         * toStringReverse to be used in testing head and all the pred fields. */
-
-        // Write this method and delete this comment
-        return null;
+        String a = new String();
+        a += '[';
+        if(head != null) {   
+            Node b = head.pred;
+            a += b.value;
+            head = head.pred;
+            while(head != null  && head.pred != b){
+                a += ',';
+                a += valueOf(head.pred);
+                head = head.pred;
+            }
+        }
+        a += ']';
+        return a.toString();
     }
 
     /** Append value v to the list. */
     public void append(E v) {
-        /* Note: this method views the list as a list with a first and
-         * a last value. It adds a new value at the end, not changing any
-         * others. */
-
-        // Write this method and delete this comment
+        if (head == null) {
+            Node a = new Node(null, v ,null);
+            a.pred = a;
+            a.succ = a;
+            head = a;
+        } else {
+            Node a = new Node(null, v, null);
+            a.pred = head.pred;
+            a.succ = head;
+            head.pred.succ = a;
+            head.pred = a;
+        }
+        size +=1;
     }
 
     /** Prepend value v to the list. */
+  
     public void prepend(E v) {
-        /* Note: this method views the list as a list with a first and
-         * a last value. It adds a new value at the beginning, so head
-         * should end up pointing to the new node. */
-
-        // Write this method and delete this comment
+         if (head == null) {
+            Node a = new Node(null, v ,null);
+            a.pred = a;
+            a.succ = a;
+            head = a;
+         } else {
+            Node a = new Node(null, v, null);
+            a.pred = head.pred;
+            a.succ = head;
+            head.pred.succ = a;
+            head.pred = a;
+            head = a;
+        }
+        size +=1;
     }
 
     /** Insert value v in a new node before node e of this circular list.
      * Precondition: e must be a node of this list, i.e. it may not be null. */
     public void insertBefore(E v, Node e) {
-        /* Note: This method views the list as a circular list, so it doesn't
-         * really matter which node head points to when the method is done.
-         * However, we require that head does not change. */
-
-        // Write this method and delete this comment
+        assert e != null;
+        Node a = new Node(null, v, null);
+            a.pred = e.pred;
+            a.succ = e;
+            e.pred.succ = a;
+            e.pred = a;
+            size += 1;
     }
 
     /** Insert value v in a new node after node e.
      * Precondition: e must be a node of this list, i.e. it may not be null. */
     public void insertAfter(E v, Node e) {
-        /* Note: This method views the list as a circular list, so it doesn't
-         * really matter which node head points to when the method is done.
-         * However, we require that head does not change. */
-
-        // Write this method and delete this comment
+        assert e != null;
+        Node a = new Node(null, v, null);
+            a.pred = e;
+            a.succ = e.succ;
+            e.succ.pred = a;
+            e.succ = a;
+            size += 1;
     }
 
     /** Remove node e from this list.
      *  Precondition: e must be a node of this list, i.e. it may not be null. */
     public void remove(Node e) {
         assert e != null;
-        /* Note: if the head (first) node is being removed and size >= 2, head
-         * should end up pointing at head's successor. */
-
-        // Write this method and delete this comment
+        if (e == head)
+            moveDown();
+        if (size == 1)
+            head = null;
+        else {
+        e.pred.succ = e.succ;
+        e.succ.pred = e.pred;
+        size -= 1;
+        }
     } 
 
 
